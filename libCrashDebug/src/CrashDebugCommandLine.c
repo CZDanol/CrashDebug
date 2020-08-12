@@ -13,6 +13,7 @@
 #include <common.h>
 #include <CrashCatcher.h>
 #include <CrashCatcherDump.h>
+#include "PrusaDumpParser.h"
 #include <CrashDebugCommandLine.h>
 #include <ElfLoad.h>
 #include <FileFailureInject.h>
@@ -73,6 +74,7 @@ typedef enum
     GDB_LOG,
     CRASH_CATCHER_BIN,
     CRASH_CATCHER_HEX,
+    PRUSA_DUMP_BIN,
 } DumpFileType;
 
 typedef enum
@@ -323,7 +325,16 @@ static void loadDumpFile(CrashDebugCommandLine* pThis)
     case CRASH_CATCHER_BIN:
         CrashCatcherDump_ReadBinary(pThis->pMemory, &pThis->context, pThis->pDumpFilename);
         break;
+    case PRUSA_DUMP_BIN:
+        PrusaDumpBin_Read(pThis->pMemory, &pThis->context, pThis->pDumpFilename);
+        break;
     }
+}
+
+static const char *getFilenameExtension(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
 }
 
 static DumpFileType getFileType(const char* pDumpFilename)
@@ -336,7 +347,11 @@ static DumpFileType getFileType(const char* pDumpFilename)
     fread(fileHeader, 1, sizeof(fileHeader), pFile);
     fclose(pFile);
 
-    if (hasBinaryCrashCatcherSignature(fileHeader))
+    const char* extension = getFilenameExtension(pDumpFilename);
+
+    if (strcmp(extension, "bin") == 0)
+        return PRUSA_DUMP_BIN;
+    else if (hasBinaryCrashCatcherSignature(fileHeader))
         return CRASH_CATCHER_BIN;
     else if (hasHexCrashCatcherSignature(fileHeader))
         return CRASH_CATCHER_HEX;
