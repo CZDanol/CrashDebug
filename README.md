@@ -13,7 +13,7 @@ It is a fork of https://github.com/adamgreen/CrashDebug adding support for Buddy
         * Go to [ezwinports](https://sourceforge.net/projects/ezwinports/files/).
         * Download `make-4.1-2-without-guile-w32-bin.zip` (get the version without guile).
         * Extract zip.
-        * Copy the contents to your mingw64 folder (either Git or previously installed; e.g.`c:\Program Files\Git\mingw64\`).
+        * Copy the content to your mingw64 folder (either Git or previously installed; e.g.`c:\Program Files\Git\mingw64\`).
             Merge the folders, but do NOT overwrite/replace any existing files. 
 
         Steps copied from [evanwill](https://gist.github.com/evanwill/0207876c3243bbb6863e65ec5dc3f058#make)
