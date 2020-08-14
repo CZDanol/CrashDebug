@@ -38,13 +38,6 @@ HOST_LD  := g++
 HOST_AR  := ar
 
 # Handle Windows and *nix differences.
-ifeq "$(OS)" "Windows_NT"
-    MAKEDIR = mkdir $(subst /,\,$(dir $@))
-    REMOVE := del /q
-    REMOVE_DIR := rd /s /q
-    QUIET := >nul 2>nul & exit 0
-    EXE := .exe
-else
 ifeq "$(shell uname)" "Darwin"
     GCOV_OBJDIR_FLAG := -object-directory
 else
@@ -55,7 +48,6 @@ endif
     REMOVE_DIR := rm -r -f
     QUIET := > /dev/null 2>&1 ; exit 0
     EXE :=
-endif
 
 # Flags to use when compiling binaries to run on this host system.
 HOST_GCCFLAGS := -O2 -g3 -ffunction-sections -fdata-sections -fno-common -MMD -MP
